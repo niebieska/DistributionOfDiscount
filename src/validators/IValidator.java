@@ -2,7 +2,7 @@ package validators;
 
 import models.ValidationResult;
 
-public class IValidator<T> {
+public interface IValidator<T> {
+    public ValidationResult validate(T t);
 
-public ValidationResult validate(T t);
 }
