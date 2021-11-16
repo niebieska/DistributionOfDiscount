@@ -1,4 +1,4 @@
 package models;
 
-public class ValidationException {
+public class ValidationException  extends Exception{
 }
