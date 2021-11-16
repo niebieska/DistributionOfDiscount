@@ -1,2 +1,4 @@
-package models;public class ValidationException {
+package models;
+
+public class ValidationException {
 }
