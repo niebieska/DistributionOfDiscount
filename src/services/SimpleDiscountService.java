@@ -29,8 +29,8 @@ public class SimpleDiscountService implements IDiscountService {
         setProducts(productRepository);
         setDiscount(discount);
     }
-    private BigDecimal calculateDiscount(ProductRepository pr, Discount d)
-    {
+
+    private BigDecimal calculateDiscount(Product p, Discount d) {
         return null;
     }
 
