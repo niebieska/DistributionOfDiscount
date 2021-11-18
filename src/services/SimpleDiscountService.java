@@ -8,6 +8,7 @@ import validators.DiscountValidator;
 import validators.ProductValidator;
 
 import java.math.BigDecimal;
+import java.util.HashSet;
 import java.util.Set;
 
 public class SimpleDiscountService implements IDiscountService {
@@ -34,12 +35,12 @@ public class SimpleDiscountService implements IDiscountService {
         return null;
     }
 
-    private BigDecimal calculateDiscountFactor(ProductRepository pr, Discount d )
+    private void calculateDiscountFactor(ProductRepository pr, Discount d )
     {
         BigDecimal pricesSum = pr.sumProductPrices();
         BigDecimal factor;
         factor = d.getAmount().divide(pricesSum);
-        return factor;
+        d.setFactor(factor);
     }
     @Override
     public void setProducts(ProductRepository pr) throws ValidationException {
@@ -52,7 +53,18 @@ public class SimpleDiscountService implements IDiscountService {
     }
 
     @Override
-    public Set<Product> getDiscountedProducts() {
-        return null;
+    public Set<Product> getDiscountedProducts(ProductRepository pr, Discount d) {
+        Set<Product> discountedProducts= new HashSet<>();
+        BigDecimal rest =d.getAmount();
+        for(Product p : pr.getProductsList())
+        {
+            BigDecimal discount = calculateDiscount(p,d);
+            rest.subtract(discount);
+            Product product = new Product(p.getName(),p.getPrice().subtract(discount));
+            discountedProducts.add(product);
+                   }
+        if( !rest.equals(0) ) { // powinno dodać do ostatniego elementu, w secie nie istnieje kolejność :/}
+
+        return discountedProducts;
     }
 }

@@ -32,4 +32,9 @@ public class ProductRepository implements IRepository {
         }
         return sum;
     }
+
+    @Override
+    public Set<Product> getProductsList() {
+        return productSet ;
+    }
 }

@@ -14,5 +14,5 @@ public interface IDiscountService {
 
     public void setDiscount(Discount d) throws ValidationException;
 
-    public Set<Product> getDiscountedProducts();
+    public Set<Product> getDiscountedProducts(ProductRepository pr, Discount d);
 }
