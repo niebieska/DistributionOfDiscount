@@ -35,13 +35,13 @@ public class SimpleDiscountService implements IDiscountService {
         return null;
     }
 
-    private void calculateDiscountFactor(ProductRepository pr, Discount d )
-    {
+    private void calculateDiscountFactor(ProductRepository pr, Discount d) {
         BigDecimal pricesSum = pr.sumProductPrices();
         BigDecimal factor;
         factor = d.getAmount().divide(pricesSum);
         d.setFactor(factor);
     }
+
     @Override
     public void setProducts(ProductRepository pr) throws ValidationException {
 
@@ -54,17 +54,23 @@ public class SimpleDiscountService implements IDiscountService {
 
     @Override
     public Set<Product> getDiscountedProducts(ProductRepository pr, Discount d) {
-        Set<Product> discountedProducts= new HashSet<>();
-        BigDecimal rest =d.getAmount();
-        for(Product p : pr.getProductsList())
-        {
-            BigDecimal discount = calculateDiscount(p,d);
+        Set<Product> discountedProducts = new HashSet<>();
+        BigDecimal rest = d.getAmount();
+        Product lastProduct = null;
+        for (Product p : pr.getProductsList()) {
+            BigDecimal discount = calculateDiscount(p, d);
             rest.subtract(discount);
-            Product product = new Product(p.getName(),p.getPrice().subtract(discount));
+            Product product = new Product(p.getName(), p.getPrice().subtract(discount), p.getNumber());
             discountedProducts.add(product);
-                   }
-        if( !rest.equals(0) ) { // powinno dodać do ostatniego elementu, w secie nie istnieje kolejność :/}
-
+            if (p.getNumber() == pr.getProductsList().size()) {
+                lastProduct = p;
+            }
+        }
+        if (rest.signum() != 0) {
+            discountedProducts.remove(lastProduct);
+            lastProduct.getPrice().subtract(rest);
+            discountedProducts.add(lastProduct);
+        }
         return discountedProducts;
     }
 }
