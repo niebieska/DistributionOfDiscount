@@ -2,6 +2,7 @@ package repositories;
 
 import models.Product;
 
+import java.math.BigDecimal;
 import java.util.Set;
 
 public class ProductRepository implements IRepository {
@@ -15,5 +16,20 @@ public class ProductRepository implements IRepository {
     @Override
     public void removeProduct(Product product) {
         productSet.remove(product);
+    }
+
+    @Override
+    public int countProducts() {
+        return productSet.size();
+    }
+
+    @Override
+    public BigDecimal sumProductPrices() {
+        BigDecimal sum = new BigDecimal(0);
+        for( Product p: productSet)
+        {
+            sum.add(p.getPrice());
+        }
+        return sum;
     }
 }
