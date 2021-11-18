@@ -29,10 +29,13 @@ public class SimpleDiscountService implements IDiscountService {
         this.discount = d;
         setProducts(productRepository);
         setDiscount(discount);
+        calculateDiscountFactor(pr,d);
     }
 
     private BigDecimal calculateDiscount(Product p, Discount d) {
-        return null;
+        BigDecimal discount = new BigDecimal(0);
+        discount = p.getPrice().multiply(d.getFactor());
+        return  discount;
     }
 
     private void calculateDiscountFactor(ProductRepository pr, Discount d) {
