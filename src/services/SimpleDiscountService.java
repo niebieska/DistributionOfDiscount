@@ -36,9 +36,10 @@ public class SimpleDiscountService implements IDiscountService {
 
     private BigDecimal calculateDiscountFactor(ProductRepository pr, Discount d )
     {
-        int productCount;
-        BigDecimal pricesSum;
-        return null;
+        BigDecimal pricesSum = pr.sumProductPrices();
+        BigDecimal factor;
+        factor = d.getAmount().divide(pricesSum);
+        return factor;
     }
     @Override
     public void setProducts(ProductRepository pr) throws ValidationException {

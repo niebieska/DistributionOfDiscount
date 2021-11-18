@@ -4,14 +4,14 @@ import java.math.BigDecimal;
 
 public class Discount {
 
-    private BigDecimal factor;
+    private BigDecimal amount;
 
-    public BigDecimal getFactor() {
-        return factor;
+    public BigDecimal getAmount() {
+        return amount;
     }
 
     public Discount(BigDecimal factor) {
-        this.factor = factor;
+        this.amount = factor;
     }
 
 
