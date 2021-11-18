@@ -34,6 +34,12 @@ public class SimpleDiscountService implements IDiscountService {
         return null;
     }
 
+    private BigDecimal calculateDiscountFactor(ProductRepository pr, Discount d )
+    {
+        int productCount;
+        BigDecimal pricesSum;
+        return null;
+    }
     @Override
     public void setProducts(ProductRepository pr) throws ValidationException {
 
