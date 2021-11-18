@@ -3,10 +3,16 @@ package repositories;
 import models.Product;
 
 import java.math.BigDecimal;
+import java.util.HashSet;
 import java.util.Set;
 
 public class ProductRepository implements IRepository {
     private Set<Product> productSet;
+
+    public ProductRepository()
+    {
+        this.productSet = new HashSet<>();
+    }
 
     @Override
     public void addProduct(Product product) {
