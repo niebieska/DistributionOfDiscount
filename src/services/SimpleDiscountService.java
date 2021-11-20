@@ -75,7 +75,7 @@ public class SimpleDiscountService implements IDiscountService {
         Product lastProduct = null;
         for (Product p : pr.getProductsList()) {
             BigDecimal discount = calculateDiscount(p, d);
-            rest.subtract(discount);
+            rest=rest.subtract(discount);
             Product product = new Product(p.getName(), p.getPrice().subtract(discount), p.getNumber());
             discountedProducts.add(product);
             if (p.getNumber() == pr.getProductsList().size()) {
