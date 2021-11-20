@@ -11,8 +11,8 @@ public class Discount {
         return amount;
     }
 
-    public Discount(BigDecimal factor) {
-        this.amount = factor;
+    public Discount(BigDecimal amount) {
+        this.amount = amount;
     }
 
 
