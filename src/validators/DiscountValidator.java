@@ -3,10 +3,20 @@ package validators;
 import models.Discount;
 import models.ValidationResult;
 
-public class DiscountValidator implements IValidator{
+import java.math.BigDecimal;
+
+public class DiscountValidator implements IValidator<Discount>{
 
     @Override
-    public ValidationResult validate(Object o) {
-        return null;
+    public ValidationResult validate(Discount d) {
+        ValidationResult validationResult = new ValidationResult(ValidationResult.Status.PASS);
+        BigDecimal discountAmount = d.getAmount();
+
+        if (discountAmount.signum() <= 0) {
+            validationResult.setReason("Discount is less or equal to 0");
+            validationResult.setStatus(ValidationResult.Status.ERROR);
+        }
+        return validationResult;
+
     }
 }
