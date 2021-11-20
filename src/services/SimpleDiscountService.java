@@ -3,6 +3,7 @@ package services;
 import models.Discount;
 import models.Product;
 import models.ValidationException;
+import models.ValidationResult;
 import repositories.ProductRepository;
 import validators.DiscountValidator;
 import validators.ProductValidator;
@@ -25,17 +26,20 @@ public class SimpleDiscountService implements IDiscountService {
     }
 
     public SimpleDiscountService(ProductRepository pr, Discount d) throws ValidationException {
+        this.productValidator = new ProductValidator();
+        this.discountValidator = new DiscountValidator();
         this.productRepository = pr;
         this.discount = d;
         setProducts(productRepository);
         setDiscount(discount);
-        calculateDiscountFactor(pr,d);
+        //calculateDiscountFactor(pr,d);
     }
 
     private BigDecimal calculateDiscount(Product p, Discount d) {
+
         BigDecimal discount = new BigDecimal(0);
         discount = p.getPrice().multiply(d.getFactor());
-        return  discount;
+        return discount;
     }
 
     private void calculateDiscountFactor(ProductRepository pr, Discount d) {
@@ -47,17 +51,26 @@ public class SimpleDiscountService implements IDiscountService {
 
     @Override
     public void setProducts(ProductRepository pr) throws ValidationException {
-
+        ValidationResult validationResult;
+        for (Product p : pr.getProductsList()) {
+            validationResult = productValidator.validate(p);
+            if (validationResult.getStatus() == ValidationResult.Status.ERROR)
+                throw new ValidationException(validationResult.getReason());
+        }
     }
 
     @Override
     public void setDiscount(Discount d) throws ValidationException {
-
+        ValidationResult validationResult;
+        validationResult = discountValidator.validate(d);
+        if (validationResult.getStatus() == ValidationResult.Status.ERROR)
+            throw new ValidationException(validationResult.getReason());
     }
 
     @Override
     public Set<Product> getDiscountedProducts(ProductRepository pr, Discount d) {
         Set<Product> discountedProducts = new HashSet<>();
+        calculateDiscountFactor(productRepository, discount);
         BigDecimal rest = d.getAmount();
         Product lastProduct = null;
         for (Product p : pr.getProductsList()) {
