@@ -1,34 +1,45 @@
+import models.Discount;
 import models.Product;
+import models.ValidationException;
 import repositories.IRepository;
 import repositories.ProductRepository;
+import services.IDiscountService;
+import services.SimpleDiscountService;
 
 import java.math.BigDecimal;
 import java.util.Scanner;
+import java.util.Set;
 
 public class DiscountDistribution {
     public static void main(String[] args) {
 
-        IRepository pr = new ProductRepository();
+        ProductRepository pr = new ProductRepository();
 
-        // wczytywanie def produktów nazwa, cena i nadanie nr
-        Scanner scanner = new Scanner(System.in);
-        int count = 0;
-        System.out.println("Podaj liczbę produktów!");
-        count =scanner.nextInt();
-        for(int i=1; i<=count; i++)
-        {
-            System.out.println("Podaj nazwę produktu" + i);
-            String name=scanner.next();
-            System.out.println("Podaj cene produktu" + i);
+        Product p1 = new Product("P1", BigDecimal.ZERO, 1);
+        Product p2 = new Product("P1", new BigDecimal(-1), 2);
+        Discount d = new Discount(BigDecimal.ZERO);
+        pr.addProduct(p1);
+        IDiscountService ds = new SimpleDiscountService();
+        try {
+            ds.setProducts(pr);
 
-            BigDecimal price  =scanner.nextBigDecimal();
-            Product p= new Product(name,price, i);
-            pr.addProduct(p);
-
+        } catch (ValidationException e) {
+            System.out.println(e);
         }
 
+        try {
+            ds.setDiscount(d);
+
+        } catch (ValidationException e) {
+            System.out.println(e);
+
+        }
+        //Set<Product> discountedProducts = ds.getDiscountedProducts(pr,d);
 
 
     }
 
+
 }
+
+
