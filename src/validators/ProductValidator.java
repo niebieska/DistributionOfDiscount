@@ -13,7 +13,7 @@ public class ProductValidator implements IValidator<Product> {
         BigDecimal productPrice = p.getPrice();
 
         if (productPrice.signum() <= 0) {
-            validationResult.setReason("Price is less or equal to 0");
+            validationResult.setReason("Given price is less or equal to 0");
             validationResult.setStatus(ValidationResult.Status.ERROR);
         }
         return validationResult;
