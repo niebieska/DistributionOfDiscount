@@ -13,7 +13,7 @@ public class DiscountValidator implements IValidator<Discount>{
         BigDecimal discountAmount = d.getAmount();
 
         if (discountAmount.signum() <= 0) {
-            validationResult.setReason("Discount is less or equal to 0");
+            validationResult.setReason("Given discount is less or equal to 0");
             validationResult.setStatus(ValidationResult.Status.ERROR);
         }
         return validationResult;
