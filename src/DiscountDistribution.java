@@ -54,7 +54,7 @@ public class DiscountDistribution {
     }
 
     private String getInput_ProductName() {
-        String name = new String("");
+        String name = "";
         Scanner scanner = new Scanner(System.in);
         boolean again = true;
         while (again) {
@@ -88,42 +88,47 @@ public class DiscountDistribution {
         return productPrice;
     }
 
+    private ProductRepository getAllUserProducts(int count) {
+        DiscountDistribution distribution = new DiscountDistribution();
+        ProductRepository pr = new ProductRepository();
+        for (int i = 1; i <= count; i++) {
+            String name = distribution.getInput_ProductName();
+            BigDecimal price = distribution.getInput_ProductPrice(i);
+            Product p = new Product(name, price, i);
+            pr.addProduct(p);
+        }
+        return pr;
+    }
+
 
     public static void main(String[] args) {
 
         ProductRepository pr = new ProductRepository();
         DiscountDistribution distribution = new DiscountDistribution();
 
-        Product p1 = new Product("P1", new BigDecimal(500), 1);
-        Product p2 = new Product("P2", new BigDecimal(1500), 2);
-        //Product p1 = new Product("P1", BigDecimal.ZERO, 1);
-        //Product p2 = new Product("P1", new BigDecimal(-1), 2);
-
-        pr.addProduct(p1);
-        pr.addProduct(p2);
-        //System.out.println(pr.sumProductPrices());
-        for (Product p : pr.getProductsList()) {
-            System.out.println("Product number\t" + p.getNumber() + " name: " + p.getName() + " discounted price: " + p.getPrice());
-        }
-        Discount d = new Discount(new BigDecimal(100));
-
         // Reading product definitions from user
-         /*int count =distribution.getInput_ProductCount();
-        for (int i = 1; i <=count ; i++) {
-            String name = distribution.getInput_ProductName();
-            BigDecimal price = distribution.getInput_ProductPrice(i);
-            Product p = new Product(name, price, i);
-            pr.addProduct(p);
-        }
+
+        int count = distribution.getInput_ProductCount();
+        pr = distribution.getAllUserProducts(count);
+
+
         //Reading discount amount
         BigDecimal discountAmount = distribution.getInput_DiscountAmount();
-        Discount d = new Discount(discountAmount); */
-        IDiscountService ds = new SimpleDiscountService(pr, d);
+        Discount d = new Discount(discountAmount);
+
+        //Service creation and calculations
+        IDiscountService ds = new SimpleDiscountService();
+
         try {
             ds.setProducts(pr);
 
         } catch (ValidationException e) {
+
             System.out.println(e);
+            pr = new ProductRepository();
+            // Reading product definitions from user again
+            count = distribution.getInput_ProductCount();
+            pr = distribution.getAllUserProducts(count);
         }
 
         try {
@@ -131,17 +136,21 @@ public class DiscountDistribution {
 
         } catch (ValidationException e) {
             System.out.println(e);
+            //Reading discount amount
+            discountAmount = distribution.getInput_DiscountAmount();
+            d = new Discount(discountAmount);
 
+        } finally {
+            ds = new SimpleDiscountService(pr, d);
         }
+
         Set<Product> discountedProducts = ds.getDiscountedProducts(pr, d);
+        System.out.println("Product List:");
         for (Product p : discountedProducts) {
-            System.out.println("Product number " + p.getNumber() + " name: " + p.getName() + " discounted price: " + p.getPrice());
+            System.out.println("nr: " + p.getNumber() + "\t name: " + p.getName() + "\t discounted price :" + p.getPrice());
         }
-
 
     }
 
-
 }
-
 
