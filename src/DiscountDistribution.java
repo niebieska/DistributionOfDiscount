@@ -124,7 +124,7 @@ public class DiscountDistribution {
 
         } catch (ValidationException e) {
 
-            System.out.println(e);
+            System.out.println(e.getMessage());
             pr = new ProductRepository();
             // Reading product definitions from user again
             count = distribution.getInput_ProductCount();
@@ -135,7 +135,7 @@ public class DiscountDistribution {
             ds.setDiscount(d);
 
         } catch (ValidationException e) {
-            System.out.println(e);
+            System.out.println(e.getMessage());
             //Reading discount amount
             discountAmount = distribution.getInput_DiscountAmount();
             d = new Discount(discountAmount);
