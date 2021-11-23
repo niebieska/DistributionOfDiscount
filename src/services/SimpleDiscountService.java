@@ -9,6 +9,7 @@ import validators.DiscountValidator;
 import validators.ProductValidator;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -45,7 +46,7 @@ public class SimpleDiscountService implements IDiscountService {
     private void calculateDiscountFactor(ProductRepository pr, Discount d) {
         BigDecimal pricesSum = pr.sumProductPrices();
         BigDecimal factor;
-        factor = d.getAmount().divide(pricesSum);
+        factor = d.getAmount().divide(pricesSum,2, RoundingMode.HALF_DOWN);
         d.setFactor(factor);
     }
 
@@ -70,7 +71,7 @@ public class SimpleDiscountService implements IDiscountService {
     @Override
     public Set<Product> getDiscountedProducts(ProductRepository pr, Discount d) {
         Set<Product> discountedProducts = new HashSet<>();
-        calculateDiscountFactor(productRepository, discount);
+        calculateDiscountFactor(pr, d);
         BigDecimal rest = d.getAmount();
         Product lastProduct = null;
         for (Product p : pr.getProductsList()) {
@@ -79,13 +80,12 @@ public class SimpleDiscountService implements IDiscountService {
             Product product = new Product(p.getName(), p.getPrice().subtract(discount), p.getNumber());
             discountedProducts.add(product);
             if (p.getNumber() == pr.getProductsList().size()) {
-                lastProduct = p;
+                lastProduct = product;
             }
         }
         if (rest.signum() != 0) {
             discountedProducts.remove(lastProduct);
-            lastProduct.getPrice().subtract(rest);
-            discountedProducts.add(lastProduct);
+            discountedProducts.add(new Product(lastProduct.getName(), lastProduct.getPrice().subtract(rest), lastProduct.getNumber()));
         }
         return discountedProducts;
     }
