@@ -27,8 +27,7 @@ public class SimpleDiscountService implements IDiscountService {
     }
 
     public SimpleDiscountService(ProductRepository pr, Discount d) throws ValidationException {
-        this.productValidator = new ProductValidator();
-        this.discountValidator = new DiscountValidator();
+         super();
         this.productRepository = pr;
         this.discount = d;
         setProducts(productRepository);
@@ -38,9 +37,7 @@ public class SimpleDiscountService implements IDiscountService {
 
     private BigDecimal calculateDiscount(Product p, Discount d) {
 
-        BigDecimal discount = new BigDecimal(0);
-        discount = p.getPrice().multiply(d.getFactor());
-        return discount;
+              return p.getPrice().multiply(d.getFactor());
     }
 
     private void calculateDiscountFactor(ProductRepository pr, Discount d) {
