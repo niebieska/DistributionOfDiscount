@@ -2,7 +2,7 @@ package models;
 
 public class ValidationResult {
 
- public enum Status {PASS, WARNING, ERROR}
+ public static enum Status {PASS, WARNING, ERROR}
  private String reason;
  private Status status;
 
